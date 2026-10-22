@@ -1,0 +1,40 @@
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: quickcart-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: quickcart
+      POSTGRES_USER: ${QUICKCART_DB_USER}
+      POSTGRES_PASSWORD: ${QUICKCART_DB_PASSWORD}
+
+    ports:
+      - "127.0.0.1:5433:5432"
+
+    networks:
+      - default
+      - airflow_shared
+
+    volumes:
+      - quickcart_postgres_data:/var/lib/postgresql/data
+      - ./sql:/sql:ro
+      - ./data:/data:ro
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  quickcart_postgres_data:
+
+networks:
+  default: {}
+  airflow_shared:
+    external: true
+    name: airflow-project_default

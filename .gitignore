@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+.env
+logs/
+
+# QuickCart local datasets and generated outputs
+data/raw/*.csv
+data/processed/*.csv
+data/processed/*.txt
+.pytest_cache/
